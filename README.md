@@ -1,1 +1,1 @@
-# Color_stones_game_python
+# Color_stones_game_kivy
