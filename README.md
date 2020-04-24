@@ -1,1 +1,1 @@
-# Color_stones_game
+# Color_stones_game_python
