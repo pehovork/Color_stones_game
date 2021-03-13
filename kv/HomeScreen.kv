@@ -1,0 +1,65 @@
+#:kivy 1.11.1
+
+<HomeScreen>:
+
+    
+    name: "HomeScreen"
+    id: HomeScreen
+    canvas:
+        Rectangle:
+            id: background
+            source: 'png/blue.png'
+            size:  self.width, self.height
+        Rectangle:
+            pos: 0, self.height /1.2
+            size: self.width, 5
+    Label:
+
+        text:  "Color stones "
+        pos_hint: {'x': 0,'y': .42}              
+        font_size: 70
+        color: (0,0,0,1) 
+
+    Label:
+        text:  "Your field size \nStart game"
+        pos_hint: {'x': -.18,'y': .2}              
+        font_size: 50
+    ImageButton:
+        source: 'png/size.png'
+        size_hint: 0.2, 0.35
+        pos_hint: {'x': .2,'y': .35}                     
+        on_press: root.manager.current = "FieldSizeScreen" 
+    
+    Label:
+        text:  "Statistics"
+        pos_hint: {'x': .25,'y': .2}              
+        font_size: 50
+    ImageButton:
+        source: 'png/statistics.png'
+        size_hint: 0.2, 0.35
+        pos_hint: {'x': .65,'y': .35}                     
+        on_press: root.manager.current = "StatisticsScreen" 
+    
+
+    Label:
+        text:  "Help"
+        pos_hint: {'x': -.21,'y': -.2}              
+        font_size: 50
+    ImageButton:
+        source: 'png/help.png'
+        size_hint: 0.2, 0.2
+        pos_hint: {'x': .19,'y': .06}                     
+        on_press: root.manager.current = "HelpScreen" 
+
+    Label:
+        text:  "Settings"
+        pos_hint: {'x': .25,'y': -.2}              
+        font_size: 50
+    ImageButton:
+        source: 'png/settings.png'
+        size_hint: 0.2, 0.3
+        pos_hint: {'x': .65,'y': .03}
+        on_press: root.manager.current = "SettingsScreen"
+    
+        
+            

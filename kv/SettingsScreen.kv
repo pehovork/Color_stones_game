@@ -1,0 +1,61 @@
+#:kivy 1.11.1
+
+
+<SettingsScreen>:
+    name: "SettingsScreen"
+    id: SettingsScreen
+    
+    canvas:
+        Rectangle:
+            id: background 
+            source: 'png/blue.png'
+            size:  self.width, self.height
+        Rectangle:
+            pos: 0, self.height /1.2
+            size: self.width, 5
+    Label:
+        text:  "Color stones "
+        pos_hint: {'x': 0,'y': .42}              
+        font_size: 70
+        color: (0,0,0,1) 
+
+    Label:
+        id: color
+        text:  "Choose screen color"
+        pos_hint: {'x': -.18,'y': .2}              
+        font_size: 50
+
+    Spinner:
+        id: spinner_color
+        text: "Blue"
+        font_size: 40
+        values: ["Blue", "Red", "Green", "Yellow", "Orange", "Grey"]
+        size_hint: 0.25, 0.15
+        pos_hint: {'x': .2,'y': .5}                     
+        #on_text: root.current_color(spinner_color.text)
+
+    Label:
+        id: color
+        text:  "Choose number of stones"
+        pos_hint: {'x': .1,'y': -.1}              
+        font_size: 50
+
+    Spinner:
+        id: spinner_stones
+        text: "3"
+        font_size: 40
+        values: ["3","4","5","6"]
+        size_hint: 0.25, 0.15
+        pos_hint: {'x': .5,'y': .2}                     
+        #on_text: root.current_color(spinner_stones.text)
+
+    ImageButton:
+        source: 'png/left_ikon.png'
+        size_hint: 0.2, 0.2
+        pos_hint: {'x': .1,'y': .05}                     
+        on_press: root.manager.current = "HomeScreen" 
+        
+
+        
+        
+            

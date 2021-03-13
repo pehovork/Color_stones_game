@@ -9,16 +9,35 @@ from kivy.uix.button import Button, ButtonBehavior
 from kivy.uix.image import Image
 from kivy.properties import NumericProperty, ObjectProperty
 from kivy.uix.label import Label
+from kivy.uix.scrollview import ScrollView
 from kivy.clock import Clock   
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.boxlayout import  BoxLayout
+from kivy.graphics import Rectangle, Color
 
- 
+
 class HomeScreen(Screen):
     pass
 
-
 class ImageButton(ButtonBehavior, Image):
     pass
+
+class SettingsScreen(Screen):
+    pass
+
+
+class StatisticsScreen(Screen):
+    pass   
+
+
+
+class HelpScreen(Screen):
+    pass
+class BoxLayout_help(BoxLayout):
+    pass
+class ScrollableLabel_help(ScrollView):
+    pass  
+
 
 
 class FieldSizeScreen(Screen):
@@ -38,12 +57,12 @@ class FieldSizeScreen(Screen):
                     sm.get_screen('GameScreen').generate(self)      # it will generate a playing field in the next screen                                        
                     break                
             except:                          
-                self.temporary = Label ( text ="Enter number !", pos_hint = {'x': .1,'y': -0.3}, font_size = 30, color = (1,0,0,1))
+                self.temporary = Label ( text ="Enter number !", pos_hint = {'x': .1,'y': -0.3}, font_size = 40, color = (1,0,0,1))
                 self.add_widget(self.temporary)            # it will add widget to field screen 
                 Clock.schedule_once(self.eraser, 3)        # The widget will only be there for 3 seconds then the delete function will be called         
                 break                                      # I added a break so I don't have an infinite loop                
             else:                                                                         
-                self.temporary = Label ( text ="Number has to be between 3 and 9 ! ", pos_hint = {'x': .1,'y': -0.3}, font_size = 30, color = (1,0,0,1))
+                self.temporary = Label ( text ="Number has to be between 3 and 9 ! ", pos_hint = {'x': .1,'y': -0.3}, font_size = 40, color = (1,0,0,1))
                 self.add_widget(self.temporary)
                 Clock.schedule_once(self.eraser, 3)
                 break
@@ -70,50 +89,52 @@ class GameScreen(Screen):
         import string
         abc=list(string.ascii_lowercase)             # list of alphabet characters
 
-        green_stone = 1 #Image(source = "C:/Users/Azog/Documents/GitHub/Color_stones_game_kivy/png/green_stone.png")
-        gold = 2        #Image(source = "C:/Users/Azog/Documents/GitHub/Color_stones_game_kivy/png/gold.png")
-        coal = 3        #Image(source = "C:/Users/Azog/Documents/GitHub/Color_stones_game_kivy/png/coal.png")
+               
+        number_of_stones = int(sm.get_screen('SettingsScreen').ids.spinner_stones.text)  # number from settings screen 
         
+                   
+        def stone_rotation (z):      
+            if main_list[z] == number_of_stones:
+                main_list[z] = 1
+                print (z)
+            else:
+                main_list[z]+=1
 
-        def otocenie_kamena (z):
-            if  main_list[z] == green_stone:                          
-                main_list[z] = gold
-            else:                                       
-                if  main_list[z] == gold:
-                    main_list[z] = coal
-                else:
-                    main_list[z] = green_stone
-
-        main_list= [green_stone] * x4*x4
-            
-
+        main_list= [1] * x4*x4
+           
+        
         import random
-
-        for g in range (3*x4):
+        
+        for g in range (6*x4):
             rand_line = random.randrange(0, x4)
             for ra_l in range (x4):
-                otocenie_kamena (rand_line*x4-x4+ra_l)  
+                stone_rotation (rand_line*x4-x4+ra_l)  
 
-        for g in range (random.randrange(0, 3)):
+        for g in range (random.randrange(0, 6)):
             for ra_u in range (x4):
-                otocenie_kamena (ra_u*x4+ra_u)
+                stone_rotation (ra_u*x4+ra_u)              
 
-        for g in range (3*x4):
+        for g in range (random.randrange(0, 6)):
+            for ra_u2 in range (x4,0,-1):
+                stone_rotation (ra_u2*x4-ra_u2)
+
+        for g in range (6*x4):
             rand_column = random.randrange(0, x4)
             for ra_s in range (x4):
-                otocenie_kamena (rand_column+x4*ra_s)
-
-        
+                stone_rotation (rand_column+x4*ra_s)
+               
+              
+              
         def button_is_pressed_collumn (self):
             for t in range (x4): 
-                otocenie_kamena (abc.index(self.text)+x4*t)    # Formula for rotating the stone - columns are rotated. Text of the button is taken - order of the letters in the list 'abc' 
+                stone_rotation (abc.index(self.text)+x4*t)    # Formula for rotating the stone - columns are rotated. Text of the button is taken - order of the letters in the list 'abc' 
             eraser2()
             generate_field()
             check ()
 
         def button_is_pressed_line (self):
             for s in range (x4): 
-                otocenie_kamena ((int(self.text))*x4-x4+s)      # Formula for rotating the stone, lines are rotated, Text of the button is taken - number
+                stone_rotation ((int(self.text))*x4-x4+s)      # Formula for rotating the stone, lines are rotated, Text of the button is taken - number
             eraser2()
             generate_field()
             check ()
@@ -121,14 +142,20 @@ class GameScreen(Screen):
 
         def button_is_pressed_diagonal (self):
             for v in range (x4): 
-                otocenie_kamena (v*x4+v)      # Formula for rotating the stone, diagonal is rotated, Text of the button is taken '*'
+                stone_rotation (v*x4+v)      # Formula for rotating the stone, diagonal from top to bottom is rotated, Text of the button is taken '*'
             eraser2()
             generate_field()
             check ()    
-            
+
+        def button_is_pressed_diagonal2 (self):
+            for r in range (x4,0,-1): 
+                stone_rotation (r*x4-r)      # Formula for rotating the stone, diagonal from bottom to top is rotated, Text of the button is taken '+'
+            eraser2()
+            generate_field()
+            check ()        
 
         def generate_field ():
-            self.game_field = GridLayout (cols=x4+1,rows=x4+1)    # create a field but I had to put it at the beginning of this def to generate it again after clicking the button   
+            self.game_field = GridLayout (cols=x4+1,rows=x4+2)    # create a field but I had to put it at the beginning of this def to generate it again after clicking the button   
             self.add_widget (self.game_field)                     # I have to add the layout itself as a widget and not just the buttons themselves !!
 
             for i in range(x4):                                   # these are the lines
@@ -150,12 +177,21 @@ class GameScreen(Screen):
                                                               
                 
                     if main_list[i*x4+j] == 1:
-                        self.game_field.add_widget(Image(source = "C:/Users/Azog/Documents/GitHub/Color_stones_game_kivy/png/green_stone.png"))              
+                        self.game_field.add_widget(Image(source = "png/1amethyst.png"))              
                     if main_list[i*x4+j] == 2:
-                        self.game_field.add_widget(Image(source = "C:/Users/Azog/Documents/GitHub/Color_stones_game_kivy/png/gold.png"))
+                        self.game_field.add_widget(Image(source = "png/2gemstone.png"))
                     if main_list[i*x4+j] == 3:
-                        self.game_field.add_widget(Image(source = "C:/Users/Azog/Documents/GitHub/Color_stones_game_kivy/png/coal.png"))
-           
+                        self.game_field.add_widget(Image(source = "png/3green_stone.png"))
+                    if main_list[i*x4+j] == 4:
+                        self.game_field.add_widget(Image(source = "C:png/4morganite.png"))
+                    if main_list[i*x4+j] == 5:
+                        self.game_field.add_widget(Image(source = "C:png/5stone.png"))
+                    if main_list[i*x4+j] == 6:
+                        self.game_field.add_widget(Image(source = "C:png/6diamond.png"))
+
+            self.button4 = Button(text="+") 
+            self.button4.bind (on_press = button_is_pressed_diagonal2)
+            self.game_field.add_widget(self.button4)
 
         def check ():
             ok = 0
@@ -173,17 +209,24 @@ class GameScreen(Screen):
     pass            
           
 
-Builder.load_file('HomeScreen.kv')
-Builder.load_file('FieldSizeScreen.kv')
-Builder.load_file('GameScreen.kv')
+Builder.load_file('kv/HomeScreen.kv')
+Builder.load_file('kv/SettingsScreen.kv')
+Builder.load_file('kv/StatisticsScreen.kv')
+Builder.load_file('kv/HelpScreen.kv')
+Builder.load_file('kv/FieldSizeScreen.kv')
+Builder.load_file('kv/GameScreen.kv')
 
 sm = ScreenManager(transition=WipeTransition())
 sm.add_widget(HomeScreen(name="HomeScreen"))
+sm.add_widget(SettingsScreen(name="SettingsScreen"))
+sm.add_widget(StatisticsScreen(name="StatisticsScreen"))
+sm.add_widget(HelpScreen(name="HelpScreen"))
 sm.add_widget(FieldSizeScreen(name="FieldSizeScreen"))
 sm.add_widget(GameScreen(name="GameScreen"))          
    
 
 class mainApp(App):                               # this is main app 
+    __version__ = "5.0.0"
     def build(self):     
         return sm
     
